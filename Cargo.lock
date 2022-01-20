@@ -7820,9 +7820,7 @@ dependencies = [
 name = "xcm-emulator"
 version = "0.1.0"
 dependencies = [
- "cumulus-pallet-dmp-queue",
  "cumulus-pallet-parachain-system",
- "cumulus-pallet-xcmp-queue",
  "cumulus-primitives-core",
  "cumulus-primitives-parachain-inherent",
  "cumulus-test-relay-sproof-builder",

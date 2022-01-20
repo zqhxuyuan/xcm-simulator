@@ -16,8 +16,8 @@ sp-io = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0
 sp-std = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.13" }
 
 cumulus-primitives-core = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.13" }
-cumulus-pallet-xcmp-queue = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.13" }
-cumulus-pallet-dmp-queue = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.13" }
+#cumulus-pallet-xcmp-queue = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.13" }
+#cumulus-pallet-dmp-queue = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.13" }
 cumulus-pallet-parachain-system = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.13" }
 parachain-info = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.13" }
 cumulus-primitives-parachain-inherent = { git = "https://github.com/paritytech/cumulus", branch = "polkadot-v0.9.13" }

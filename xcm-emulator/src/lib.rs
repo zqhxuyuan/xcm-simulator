@@ -9,9 +9,9 @@ pub use frame_system;
 pub use sp_io::TestExternalities;
 pub use sp_std::{cell::RefCell, collections::vec_deque::VecDeque, marker::PhantomData};
 
-pub use cumulus_pallet_dmp_queue;
+// pub use cumulus_pallet_dmp_queue;
 pub use cumulus_pallet_parachain_system;
-pub use cumulus_pallet_xcmp_queue;
+// pub use cumulus_pallet_xcmp_queue;
 pub use cumulus_primitives_core::{
 	self, relay_chain::BlockNumber as RelayBlockNumber, DmpMessageHandler, ParaId, PersistedValidationData,
 	XcmpMessageHandler,
