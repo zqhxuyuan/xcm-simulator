@@ -285,7 +285,7 @@ thread_local! {
 		= RefCell::new(VecDeque::new());
 
 	#[allow(clippy::type_complexity)]
-	pub static DOWNWARDED_MESSAGES: RefCell<VecDeque<(u32, RelayBlockNumber)>>
+	pub static DOWNWARDED_MESSAGES: RefCell<VecDeque<(u32, RelayBlockNumber, Vec<u8>)>>
 		= RefCell::new(VecDeque::new());
 
 	/// Horizontal messages, each message is: `(to_para_id, [(from_para_id, relay_block_number, msg)])`
@@ -347,7 +347,7 @@ macro_rules! decl_test_network {
 						$para_id => {
 							let msg_1 = messages.clone();
 							let msgs = messages.into_iter().filter(|m| {
-								!$crate::DOWNWARDED_MESSAGES.with(|b| b.borrow_mut().contains(&(to_para_id, m.0)))
+								!$crate::DOWNWARDED_MESSAGES.with(|b| b.borrow_mut().contains(&(to_para_id, m.0, m.1.clone())))
 							})
 							.inspect(|m| {
 								log::info!(target: "xcm-emulator", "_process_downward_messages at:{}, msg:{:?}", m.0, m.1);
@@ -355,7 +355,7 @@ macro_rules! decl_test_network {
 							<$parachain>::handle_dmp_messages(msgs, $crate::Weight::max_value());
 							//$crate::DOWNWARDED_MESSAGES.with(|b| b.borrow_mut().push_back((to_para_id, 1)));
 							for m in msg_1 {
-								$crate::DOWNWARDED_MESSAGES.with(|b| b.borrow_mut().push_back((to_para_id, m.0)));
+								$crate::DOWNWARDED_MESSAGES.with(|b| b.borrow_mut().push_back((to_para_id, m.0, m.1)));
 							}
 						},
 					)*
