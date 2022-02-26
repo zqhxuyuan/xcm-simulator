@@ -54,7 +54,7 @@ macro_rules! decl_test_relay_chain {
 				max_weight: $crate::Weight,
 			) -> Result<$crate::Weight, ($crate::MessageId, $crate::Weight)> {
 				use $crate::{TestExt, UmpSink};
-
+				log::info!(target: "xcm-emulator", "process_upward_message");
 				Self::execute_with(|| {
 					$crate::XcmSink::<$crate::XcmExecutor<$xcm_config>, $runtime>::process_upward_message(
 						origin, msg, max_weight,
@@ -87,6 +87,8 @@ macro_rules! decl_test_parachain {
 			) -> $crate::Weight {
 				use $crate::{TestExt, XcmpMessageHandler};
 
+				log::info!(target: "xcm-emulator", "handle_xcmp_messages");
+
 				$name::execute_with(|| <$xcmp_message_handler>::handle_xcmp_messages(iter, max_weight))
 			}
 		}
@@ -98,6 +100,7 @@ macro_rules! decl_test_parachain {
 			) -> $crate::Weight {
 				use $crate::{DmpMessageHandler, TestExt};
 
+				log::info!(target: "xcm-emulator", "handle_dmp_messages");
 				$name::execute_with(|| <$dmp_message_handler>::handle_dmp_messages(iter, max_weight))
 			}
 		}
