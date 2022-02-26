@@ -158,6 +158,7 @@ mod tests {
 
 	#[test]
 	fn dmp() {
+		env_logger::init();
 		Network::reset();
 
 		let remark = yayoi::Call::System(frame_system::Call::<yayoi::Runtime>::remark_with_event {

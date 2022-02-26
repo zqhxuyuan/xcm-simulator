@@ -148,6 +148,7 @@ macro_rules! __impl_ext_for_relay_chain {
 							if downward_messages.len() == 0 {
 								continue;
 							}
+							log::info!(target: "xcm-emulator", "DMP message count:{}", downward_messages.len());
 							_Messenger::send_downward_messages(para_id, downward_messages.into_iter());
 
 							// Note: no need to handle horizontal messages, as the
