@@ -120,6 +120,7 @@ macro_rules! __impl_ext_for_relay_chain {
 		thread_local! {
 			pub static $ext_name: $crate::RefCell<$crate::TestExternalities>
 				= $crate::RefCell::new($new_ext);
+			// pub static $new_ext: $crate::RefCell<$crate::VecDeque<u32>> = $crate::RefCell::new($crate::VecDeque::new());
 		}
 
 		impl $crate::TestExt for $name {
@@ -146,6 +147,7 @@ macro_rules! __impl_ext_for_relay_chain {
 								.into_iter()
 								.inspect(|m| {
 									log::info!(target: "xcm-emulator", "DMP at:{} msg:{:?}", m.sent_at, m.msg);
+									// $crate::SENDS.with(|b| b.borrow_mut().push_back(m.sent_at));
 								})
 								.map(|inbound| (inbound.sent_at, inbound.msg));
 							if downward_messages.len() == 0 {
@@ -281,6 +283,11 @@ thread_local! {
 	#[allow(clippy::type_complexity)]
 	pub static DOWNWARD_MESSAGES: RefCell<VecDeque<(u32, Vec<(RelayBlockNumber, Vec<u8>)>)>>
 		= RefCell::new(VecDeque::new());
+
+	#[allow(clippy::type_complexity)]
+	pub static DOWNWARDED_MESSAGES: RefCell<VecDeque<(u32, RelayBlockNumber)>>
+		= RefCell::new(VecDeque::new());
+
 	/// Horizontal messages, each message is: `(to_para_id, [(from_para_id, relay_block_number, msg)])`
 	#[allow(clippy::type_complexity)]
 	pub static HORIZONTAL_MESSAGES: RefCell<VecDeque<(u32, Vec<(ParaId, RelayBlockNumber, Vec<u8>)>)>>
@@ -297,7 +304,9 @@ macro_rules! decl_test_network {
 			parachains = vec![ $( ($para_id:expr, $parachain:ty), )* ],
 		}
 	) => {
-		pub struct $name;
+		pub struct $name {
+			dmp_msgs: Vec<u32>
+		}
 
 		impl $name {
 			pub fn reset() {
@@ -336,7 +345,18 @@ macro_rules! decl_test_network {
 				match to_para_id {
 					$(
 						$para_id => {
-							<$parachain>::handle_dmp_messages(messages.into_iter(), $crate::Weight::max_value());
+							let msg_1 = messages.clone();
+							let msgs = messages.into_iter().filter(|m| {
+								!$crate::DOWNWARDED_MESSAGES.with(|b| b.borrow_mut().contains(&(to_para_id, m.0)))
+							})
+							.inspect(|m| {
+								log::info!(target: "xcm-emulator", "_process_downward_messages at:{}, msg:{:?}", m.0, m.1);
+							});
+							<$parachain>::handle_dmp_messages(msgs, $crate::Weight::max_value());
+							//$crate::DOWNWARDED_MESSAGES.with(|b| b.borrow_mut().push_back((to_para_id, 1)));
+							for m in msg_1 {
+								$crate::DOWNWARDED_MESSAGES.with(|b| b.borrow_mut().push_back((to_para_id, m.0)));
+							}
 						},
 					)*
 					_ => unreachable!(),
