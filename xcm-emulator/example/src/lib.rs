@@ -224,6 +224,7 @@ mod tests {
 
 	#[test]
 	fn xcmp() {
+		env_logger::init();
 		Network::reset();
 
 		let remark = yayoi::Call::System(frame_system::Call::<yayoi::Runtime>::remark_with_event {

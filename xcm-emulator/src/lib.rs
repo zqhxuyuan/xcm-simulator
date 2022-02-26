@@ -243,11 +243,13 @@ macro_rules! __impl_ext_for_parachain {
 						// send upward messages
 						let para_id = $crate::parachain_info::Pallet::<$runtime>::get();
 						for msg in collation_info.upward_messages.clone() {
+							log::info!(target: "xcm-emulator", "UMP para_id:{} msg:{:?}", para_id, msg);
 							_Messenger::send_upward_message(para_id.into(), msg);
 						}
 
 						// send horizontal messages
 						for msg in collation_info.horizontal_messages {
+							log::info!(target: "xcm-emulator", "HRMP para_id:{} msg:{:?}", para_id, msg);
 							_Messenger::send_horizontal_messages(
 								msg.recipient.into(),
 								vec![(para_id.into(), 1, msg.data)].into_iter(),
