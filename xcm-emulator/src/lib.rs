@@ -144,6 +144,9 @@ macro_rules! __impl_ext_for_relay_chain {
 							// downward messages
 							let downward_messages = <$runtime>::dmq_contents(para_id.into())
 								.into_iter()
+								.inspect(|m| {
+									log::info!(target: "xcm-emulator", "DMP at:{} msg:{:?}", m.sent_at, m.msg);
+								})
 								.map(|inbound| (inbound.sent_at, inbound.msg));
 							if downward_messages.len() == 0 {
 								continue;
